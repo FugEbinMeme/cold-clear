@@ -235,14 +235,12 @@ impl PlayerDrawState {
             ("Single", format!("{}", self.statistics.singles)),
             ("Double", format!("{}", self.statistics.doubles)),
             ("Triple", format!("{}", self.statistics.triples)),
-            ("Tetris", format!("{}", self.statistics.tetrises)),
-            // ("Mini T0", format!("{}", self.statistics.mini_tspin_zeros)),
-            // ("Mini T1", format!("{}", self.statistics.mini_tspin_singles)),
-            // ("Mini T2", format!("{}", self.statistics.mini_tspin_doubles)),
+            ("Quad", format!("{}", self.statistics.quads)),
             ("T-Spin 0", format!("{}", self.statistics.tspin_zeros)),
             ("T-Spin 1", format!("{}", self.statistics.tspin_singles)),
             ("T-Spin 2", format!("{}", self.statistics.tspin_doubles)),
             ("T-Spin 3", format!("{}", self.statistics.tspin_triples)),
+            ("T-Spin 4", format!("{}", self.statistics.tspin_quads)),
             ("Perfect", format!("{}", self.statistics.perfect_clears))
         ];
         if let Some(ref info) = self.info {

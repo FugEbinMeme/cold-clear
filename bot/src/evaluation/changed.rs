@@ -31,8 +31,7 @@ pub struct Standard {
     pub tspin1: i32,
     pub tspin2: i32,
     pub tspin3: i32,
-    pub mini_tspin1: i32,
-    pub mini_tspin2: i32,
+    pub tspin4: i32,
     pub perfect_clear: i32,
     pub combo_garbage: i32,
     pub move_time: i32,
@@ -70,11 +69,10 @@ impl Default for Standard {
             clear2: -100,
             clear3: -58,
             clear4: 390,
-            tspin1: 121,
+            tspin1: 181,
             tspin2: 410,
             tspin3: 602,
-            mini_tspin1: -158,
-            mini_tspin2: -93,
+            tspin4: 800,
             perfect_clear: 999,
             combo_garbage: 150,
 
@@ -112,8 +110,7 @@ impl Standard {
             tspin1: 131,
             tspin2: 392,
             tspin3: 628,
-            mini_tspin1: -188,
-            mini_tspin2: -682,
+            tspin4: 800,
             perfect_clear: 991,
             combo_garbage: 272,
             move_time: -1,
@@ -129,7 +126,7 @@ impl Evaluator for Standard {
     type Reward = Reward;
 
     fn name(&self) -> String {
-        let mut info = "Changed".to_owned();
+        let mut info = "Chnaged".to_owned();
         if let Some(extra) = &self.sub_name {
             info.push('\n');
             info.push_str(extra);
@@ -195,11 +192,8 @@ impl Evaluator for Standard {
                 PlacementKind::Tspin3 => {
                     acc_eval += self.tspin3;
                 }
-                PlacementKind::MiniTspin1 => {
-                    acc_eval += self.mini_tspin1;
-                }
-                PlacementKind::MiniTspin2 => {
-                    acc_eval += self.mini_tspin2;
+                PlacementKind::Tspin4 => {
+                    acc_eval += self.tspin4;
                 }
                 _ => {}
             }
@@ -207,7 +201,7 @@ impl Evaluator for Standard {
 
         if placed == Piece::T {
             match lock.placement_kind {
-                PlacementKind::Tspin1 | PlacementKind::Tspin2 | PlacementKind::Tspin3 => {}
+                PlacementKind::Tspin1 | PlacementKind::Tspin2 | PlacementKind::Tspin3 | PlacementKind::Tspin4 => {}
                 _ => acc_eval += self.wasted_t
             }
         }
@@ -259,8 +253,6 @@ impl Evaluator for Standard {
                 } else {
                     break
                 }
-            } else if let Some(twist) = fin_to_win(&board) {
-                cutout_tslot(board.clone(), twist.piece())
             } else {
                 break
             };
@@ -635,55 +627,6 @@ fn tst_twist(board: &Board) -> Option<TstTwist> {
     None
 }
 
-/// Finds this thing:
-/// ```
-/// ....[][]
-/// ........
-///   ......[]
-///   []....
-///     []..[]
-/// ```
-/// and the mirror version, with sky above.
-fn fin_to_win(board: &Board) -> Option<TstTwist> {
-    for x in 0..7 {
-        // left-pointing fin
-        let h = board.column_heights()[x as usize + 1];
-        if board.column_heights()[x as usize] <= h+1 &&
-                board.occupied(x+1, h-1) &&
-                board.occupied(x+2, h+2) && board.occupied(x+2, h-2) &&
-                board.occupied(x+3, h+2) &&
-                board.occupied(x+4, h) && board.occupied(x+4, h-2) &&
-                !board.occupied(x+2, h+1) && !board.occupied(x+3, h+1) &&
-                !board.occupied(x+2, h) && !board.occupied(x+3, h) &&
-                !board.occupied(x+2, h-1) && !board.occupied(x+3, h-1) &&
-                !board.occupied(x+3, h-2) {
-            return Some(TstTwist {
-                point_left: true,
-                is_tslot: true,
-                x: x+3,
-                y: h-1
-            });
-        }
-        // right-pointing fin
-        let h = board.column_heights()[x as usize + 2];
-        if board.column_heights()[x as usize + 3] <= h+1 &&
-                board.occupied(x, h+2) && board.occupied(x+1, h+2) &&
-                board.occupied(x+1, h-2) && board.occupied(x+2, h-1) &&
-                board.occupied(x-1, h) && board.occupied(x-1, h-2) &&
-                !board.occupied(x, h+1) && !board.occupied(x+1, h+1) &&
-                !board.occupied(x, h) && !board.occupied(x+1, h) &&
-                !board.occupied(x, h-1) && !board.occupied(x+1, h-1) &&
-                !board.occupied(x, h-2) {
-            return Some(TstTwist {
-                point_left: false,
-                is_tslot: true,
-                x,
-                y: h-1
-            });
-        }
-    }
-    None
-}
 
 struct Cutout {
     lines: usize,

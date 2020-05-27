@@ -368,10 +368,7 @@ impl Game {
             hard_drop_distance: dist
         });
 
-        if locked.locked_out {
-            self.state = GameState::GameOver;
-            events.push(Event::GameOver);
-        } else if locked.cleared_lines.is_empty() {
+        if locked.cleared_lines.is_empty() {
             self.state = GameState::SpawnDelay(self.config.spawn_delay);
             self.deal_garbage(events, garbage_rng);
         } else {

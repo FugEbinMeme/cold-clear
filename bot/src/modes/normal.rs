@@ -229,20 +229,18 @@ impl Thinker {
             board.column_heights().iter().all(|&y| y < 18);
             let mut result = board.clone();
             let lock = result.lock_piece(mv.location);
-            // Don't add deaths by lock out, don't add useless mini tspins
-            if !lock.locked_out && !(can_be_hd && lock.placement_kind == PlacementKind::MiniTspin) {
-                let move_time = mv.inputs.time + if hold { 1 } else { 0 };
-                let (evaluation, accumulated) = eval.evaluate(
-                    &lock, &result, move_time, spawned.kind.0
-                );
-                children.push(ChildData {
-                    evaluation,
-                    accumulated,
-                    board: result,
-                    hold,
-                    mv: mv.location
-                });
-            }
+            
+            let move_time = mv.inputs.time + if hold { 1 } else { 0 };
+            let (evaluation, accumulated) = eval.evaluate(
+            &lock, &result, move_time, spawned.kind.0
+            );
+            children.push(ChildData {
+                evaluation,
+                accumulated,
+                board: result,
+                hold,
+                mv: mv.location
+            });
         }
     }
 }
