@@ -82,11 +82,11 @@ impl PlacementKind {
             PlacementKind::Clear2     => "Double",
             PlacementKind::Clear3     => "Triple",
             PlacementKind::Clear4     => "Quad",
-            PlacementKind::Tspin      => "T-Spin",
-            PlacementKind::Tspin1     => "T-Spin Single",
-            PlacementKind::Tspin2     => "T-Spin Double",
-            PlacementKind::Tspin3     => "T-Spin Triple",
-            PlacementKind::Tspin4     => "T-Spin Quad",
+            PlacementKind::Tspin      => "Spin",
+            PlacementKind::Tspin1     => "Spin Single",
+            PlacementKind::Tspin2     => "Spin Double",
+            PlacementKind::Tspin3     => "Spin Triple",
+            PlacementKind::Tspin4     => "Spin Quad",
         }
     }
 
@@ -97,11 +97,11 @@ impl PlacementKind {
             PlacementKind::Clear2     => "D",
             PlacementKind::Clear3     => "T",
             PlacementKind::Clear4     => "Q",
-            PlacementKind::Tspin      => "TS",
-            PlacementKind::Tspin1     => "TSS",
-            PlacementKind::Tspin2     => "TSD",
-            PlacementKind::Tspin3     => "TST",
-            PlacementKind::Tspin4     => "TSQ",
+            PlacementKind::Tspin      => "S",
+            PlacementKind::Tspin1     => "SS",
+            PlacementKind::Tspin2     => "SD",
+            PlacementKind::Tspin3     => "ST",
+            PlacementKind::Tspin4     => "SQ",
         }
     }
 }
