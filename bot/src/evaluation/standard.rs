@@ -35,7 +35,6 @@ pub struct Standard {
     pub perfect_clear: i32,
     pub combo_garbage: i32,
     pub move_time: i32,
-    pub wasted_t: i32,
 
     pub use_bag: bool,
     pub sub_name: Option<String>
@@ -63,7 +62,6 @@ impl Default for Standard {
             well_column: [20, 23, 20, 50, 59, 21, 59, 10, -10, 24],
 
             move_time: -3,
-            wasted_t: -152,
             b2b_clear: 104,
             clear1: -143,
             clear2: -100,
@@ -114,7 +112,6 @@ impl Standard {
             perfect_clear: 991,
             combo_garbage: 272,
             move_time: -1,
-            wasted_t: -147,
             use_bag: true,
             sub_name: None
         }
@@ -196,13 +193,6 @@ impl Evaluator for Standard {
                     acc_eval += self.tspin4;
                 }
                 _ => {}
-            }
-        }
-
-        if placed == Piece::T {
-            match lock.placement_kind {
-                PlacementKind::Tspin1 | PlacementKind::Tspin2 | PlacementKind::Tspin3 | PlacementKind::Tspin4 => {}
-                _ => acc_eval += self.wasted_t
             }
         }
 
