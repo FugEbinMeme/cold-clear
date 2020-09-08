@@ -80,7 +80,7 @@ impl Default for Standard {
 
             use_bag: true,
             timed_jeopardy: true,
-            stack_pc_damage: false,
+            stack_pc_damage: true,
             sub_name: None
         }
     }
@@ -253,9 +253,7 @@ impl Evaluator for Standard {
                             None
                         }
                     })
-                })
-                .or_else(|| fin_left(&board))
-                .or_else(|| fin_right(&board));
+                });
             let result = match cutout_location {
                 Some(location) => cutout_tslot(board.clone(), location),
                 None => break
@@ -505,32 +503,6 @@ detect_shape! {
     [_ ? ?]
     [_ _ ?]
     [_ ? ?]
-}
-
-detect_shape! {
-    fin_left
-    heights [h1 h2 _ _]
-    require (|_, _| h1 <= h2+1)
-    start_y(h2 + 2)
-    success (3, h2-1, T, West)
-    [? ? # # ?]
-    [? ? _ _ ?]
-    [? ? _ _ #]
-    [? ? _ _ ?]
-    [? ? # _ #]
-}
-
-detect_shape! {
-    fin_right
-    heights [_ _ h1 h2]
-    require (|board, x| h2 <= h1+1 && board.occupied(x-1, h1) && board.occupied(x-1, h1-2))
-    start_y (h1 + 2)
-    success (0, h1-1, T, East)
-    [# # ? ?]
-    [_ _ ? ?]
-    [_ _ ? ?]
-    [_ _ ? ?]
-    [_ # ? ?]
 }
 
 fn cave_tslot(board: &Board, mut starting_point: FallingPiece) -> Option<FallingPiece> {
