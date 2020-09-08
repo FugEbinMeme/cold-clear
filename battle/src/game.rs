@@ -7,7 +7,6 @@ pub struct Game {
     pub board: Board<ColoredRow>,
     state: GameState,
     config: GameConfig,
-    did_hold: bool,
     prev: Controller,
     used: Controller,
     left_das: u32,
@@ -67,7 +66,6 @@ impl Game {
             board, config,
             prev: Default::default(),
             used: Default::default(),
-            did_hold: false,
             left_das: config.delayed_auto_shift,
             right_das: config.delayed_auto_shift,
             going_right: false,
@@ -85,7 +83,7 @@ impl Game {
         update_input(&mut self.used.rotate_right, self.prev.rotate_right, current.rotate_right);
         update_input(&mut self.used.rotate_left, self.prev.rotate_left, current.rotate_left);
         update_input(&mut self.used.soft_drop, self.prev.soft_drop, current.soft_drop);
-        update_input(&mut self.used.hold, self.prev.hold, current.hold);
+        self.used.hold = !self.prev.hold && current.hold;
         self.used.hard_drop = !self.prev.hard_drop && current.hard_drop;
         self.used.soft_drop = current.soft_drop;
 
@@ -196,8 +194,7 @@ impl Game {
                 let was_on_stack = self.board.on_stack(&falling.piece);
 
                 // Hold
-                if !self.did_hold && self.used.hold {
-                    self.did_hold = true;
+                if self.used.hold {
                     events.push(Event::PieceHeld(falling.piece.kind.0));
                     if let Some(piece) = self.board.hold(falling.piece.kind.0) {
                         // Piece in hold; the piece spawns instantly
@@ -359,7 +356,6 @@ impl Game {
         garbage_rng: &mut impl Rng,
         dist: Option<i32>
     ) {
-        self.did_hold = false;
         let locked = self.board.lock_piece(falling.piece);
 
         events.push(Event::PiecePlaced {
