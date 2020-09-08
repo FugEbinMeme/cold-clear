@@ -267,14 +267,13 @@ impl Thinker {
             let lock = result.lock_piece(mv.location);
             
             let move_time = mv.inputs.time + if hold { 1 } else { 0 };
-            let (evaluation, accumulated) = eval.evaluate(
-            &lock, &result, move_time, spawned.kind.0
+            let (evaluation, reward) = eval.evaluate(
+                &lock, &result, move_time, spawned.kind.0
             );
             children.push(ChildData {
                 evaluation,
-                accumulated,
+                reward,
                 board: result,
-                hold,
                 mv: mv.location
             });
         }
