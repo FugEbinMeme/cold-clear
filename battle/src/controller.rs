@@ -45,6 +45,7 @@ impl PieceMoveExecutor {
                                 self.controller.right = false;
                                 self.controller.rotate_left = false;
                                 self.controller.rotate_right = false;
+                                self.controller.rotate_180 = false;
                                 self.controller.left = false;
 
                                 self.controller.soft_drop = true;
@@ -57,6 +58,7 @@ impl PieceMoveExecutor {
                                 self.controller.right = false;
                                 self.controller.rotate_left = false;
                                 self.controller.rotate_right = false;
+                                self.controller.rotate_180 = false;
                                 self.controller.soft_drop = false;
                                 
                                 self.controller.left ^= true;
@@ -68,6 +70,7 @@ impl PieceMoveExecutor {
                                 self.controller.left = false;
                                 self.controller.rotate_left = false;
                                 self.controller.rotate_right = false;
+                                self.controller.rotate_180 = false;
                                 self.controller.soft_drop = false;
                                 
                                 self.controller.right ^= true;
@@ -78,6 +81,7 @@ impl PieceMoveExecutor {
                             Some(PieceMovement::Cw) => {
                                 self.controller.right = false;
                                 self.controller.rotate_left = false;
+                                self.controller.rotate_180 = false;
                                 self.controller.left = false;
                                 self.controller.soft_drop = false;
                                 
@@ -90,10 +94,23 @@ impl PieceMoveExecutor {
                                 self.controller.left = false;
                                 self.controller.right = false;
                                 self.controller.rotate_right = false;
+                                self.controller.rotate_180 = false;
                                 self.controller.soft_drop = false;
                                 
                                 self.controller.rotate_left ^= true;
                                 if self.controller.rotate_left {
+                                    self.executing.pop_front();
+                                }
+                            }
+                            Some(PieceMovement::Flip) => {
+                                self.controller.left = false;
+                                self.controller.right = false;
+                                self.controller.rotate_right = false;
+                                self.controller.rotate_left = false;
+                                self.controller.soft_drop = false;
+                                
+                                self.controller.rotate_180 ^= true;
+                                if self.controller.rotate_180 {
                                     self.executing.pop_front();
                                 }
                             }

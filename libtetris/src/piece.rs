@@ -112,6 +112,12 @@ impl FallingPiece {
         self.rotate(target, board, true)
     }
 
+    pub fn flip<R: Row>(&mut self, board: &Board<R>) -> bool {
+        let mut target = self.kind;
+        target.flip();
+        self.rotate(target, board, false)
+    }
+
     pub fn same_location(&self, other: &Self) -> bool {
         let mut self_cells = self.cells();
         self_cells.sort();
@@ -168,6 +174,16 @@ impl RotationState {
             East  => *self = North
         }
     }
+
+    pub fn flip(&mut self) {
+        use RotationState::*;
+        match self {
+            North => *self = South,
+            East  => *self = West,
+            South => *self = North,
+            West  => *self = East
+        }
+    }
 }
 
 impl PieceState {
@@ -177,6 +193,10 @@ impl PieceState {
 
     pub fn ccw(&mut self) {
         self.1.ccw()
+    }
+
+    pub fn flip(&mut self) {
+        self.1.flip()
     }
 
     /// Returns the cells this piece and orientation occupy relative to rotation point 1, as well
@@ -297,16 +317,18 @@ pub enum PieceMovement {
     Right,
     Cw,
     Ccw,
+    Flip,
     SonicDrop
 }
 
 impl PieceMovement {
     pub fn apply(self, piece: &mut FallingPiece, board: &Board) -> bool {
         match self {
-            PieceMovement::Left => piece.shift(board, -1, 0),
-            PieceMovement::Right => piece.shift(board, 1, 0),
-            PieceMovement::Ccw => piece.ccw(board),
-            PieceMovement::Cw => piece.cw(board),
+            PieceMovement::Left      => piece.shift(board, -1, 0),
+            PieceMovement::Right     => piece.shift(board, 1, 0),
+            PieceMovement::Ccw       => piece.ccw(board),
+            PieceMovement::Cw        => piece.cw(board),
+            PieceMovement::Flip      => piece.flip(board),
             PieceMovement::SonicDrop => piece.sonic_drop(board)
         }
     }
