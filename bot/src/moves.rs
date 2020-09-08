@@ -40,50 +40,17 @@ pub fn find_moves(
     let mut check_queue = vec![];
     let fast_mode;
 
-    if board.column_heights().iter().all(|&v| v < 16) {
-        // We know that we can reach any column and rotation state without bumping into the terrain
-        // at 0G here, so we can just grab those starting positions.
-        let starts = match mode {
-            MovementMode::TwentyG => vec![
-                (spawned, InputList {
-                    movements: ArrayVec::new(),
-                    time: 0
-                })
-            ],
-            _ => zero_g_starts(spawned.kind.0),
-        };
-        // Fast mode prevents checking a lot of stack movement that is unlikely (but still could)
-        // to lead to new placements. Use ZeroGComplete to get these missed positions.
-        fast_mode = mode == MovementMode::ZeroG;
-        for (mut place, mut inputs) in starts {
-            let orig_y = place.y;
-            place.sonic_drop(board);
-            if !fast_mode {
-                checked.insert(place);
-            }
-            lock_check(place, &mut locks, inputs.clone());
-            if mode != MovementMode::HardDropOnly {
-                // Initialize stack movement starting positions.
-                inputs.movements.push(PieceMovement::SonicDrop);
-                if mode != MovementMode::TwentyG {
-                    inputs.time += 2 * (orig_y - place.y) as u32;
-                }
-                check_queue.push(Placement { inputs, location: place });
-            }
-        }
-    } else {
-        fast_mode = false;
-        let mut movements = ArrayVec::new();
-        if mode == MovementMode::TwentyG {
-            spawned.sonic_drop(board);
-            movements.push(PieceMovement::SonicDrop);
-        }
-        checked.insert(spawned);
-        check_queue.push(Placement {
-            inputs: InputList { movements, time: 0 },
-            location: spawned
-        });
+    fast_mode = false;
+    let mut movements = ArrayVec::new();
+    if mode == MovementMode::TwentyG {
+        spawned.sonic_drop(board);
+        movements.push(PieceMovement::SonicDrop);
     }
+    checked.insert(spawned);
+    check_queue.push(Placement {
+        inputs: InputList { movements, time: 0 },
+        location: spawned
+    });
 
     fn next(q: &mut Vec<Placement>) -> Option<Placement> {
         q.sort_by(|a, b|
@@ -111,21 +78,19 @@ pub fn find_moves(
                 PieceMovement::Right, false
             );
 
-            if position.kind.0 != Piece::O {
-                attempt(
-                    board, &moves, position,
-                    &mut checked, &mut check_queue,
-                    mode, fast_mode,
-                    PieceMovement::Cw, false
-                );
+            attempt(
+                board, &moves, position,
+                &mut checked, &mut check_queue,
+                mode, fast_mode,
+                PieceMovement::Cw, false
+            );
 
-                attempt(
-                    board, &moves, position,
-                    &mut checked, &mut check_queue,
-                    mode, fast_mode,
-                    PieceMovement::Ccw, false
-                );
-            }
+            attempt(
+                board, &moves, position,
+                &mut checked, &mut check_queue,
+                mode, fast_mode,
+                PieceMovement::Ccw, false
+            );
 
             if mode == MovementMode::ZeroG {
                 attempt(

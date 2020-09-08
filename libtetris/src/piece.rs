@@ -72,43 +72,25 @@ impl FallingPiece {
         }
     }
 
-    fn rotate<R: Row>(&mut self, target: PieceState, board: &Board<R>) -> bool {
+    fn rotate<R: Row>(&mut self, target: PieceState, board: &Board<R>, is_ccw: bool) -> bool {
         let initial = *self;
         self.kind = target;
-        let initial_offsets = initial.kind.rotation_points();
-        let target_offsets = target.rotation_points();
-        let kicks = initial_offsets.iter()
-            .zip(target_offsets.iter())
-            .map(|(&(x1, y1), &(x2, y2))| (x1 - x2, y1 - y2));
+        let kicks = if is_ccw {
+            [(0, 0), (1, 0), (0, -1), (1, -1), (0, -2), (1, -2), (2, 0), (2, -1), (2, -2), (-1, 0), (-1, -1), (0, 1), (1, 1), (2, 1), (-1, -2), (-2, 0), (0, 2), (1, 2), (2, 2), (-2, -1), (-2, -2), (-1, 1)]
+        } else {
+            [(0, 0), (-1, 0), (0, -1), (-1, -1), (0, -2), (-1, -2), (-2, 0), (-2, -1), (-2, -2), (1, 0), (1, -1), (0, 1), (-1, 1), (-2, 1), (1, -2), (2, 0), (0, 2), (-1, 2), (-2, 2), (2, -1), (2, -2), (1, 1)]
+        };
 
-        for (i, (dx, dy)) in kicks.enumerate() {
+        for &(dx, dy) in &kicks {
             self.x = initial.x + dx;
             self.y = initial.y + dy;
             if !board.obstructed(self) {
-                if target.0 == Piece::T {
-                    let mut mini_corners = 0;
-                    for &(dx, dy) in &target.1.mini_tspin_corners() {
-                        if board.occupied(self.x + dx, self.y + dy) {
-                            mini_corners += 1;
-                        }
-                    }
+                let mut piece = *self;
 
-                    let mut non_mini_corners = 0;
-                    for &(dx, dy) in &target.1.non_mini_tspin_corners() {
-                        if board.occupied(self.x + dx, self.y + dy) {
-                            non_mini_corners += 1;
-                        }
-                    }
-
-                    if non_mini_corners + mini_corners >= 3 {
-                        if i == 4 || mini_corners == 2 {
-                            self.tspin = TspinStatus::Full;
-                        } else {
-                            self.tspin = TspinStatus::Mini;
-                        }
-                    } else {
-                        self.tspin = TspinStatus::None;
-                    }
+                if !piece.shift(board, -1, 0) && !piece.shift(board, 1, 0) && !piece.shift(board, 0, 1) && !piece.shift(board, 0, -1) {
+                    self.tspin = TspinStatus::Full;
+                } else {
+                    self.tspin = TspinStatus::None;
                 }
                 return true
             }
@@ -121,13 +103,13 @@ impl FallingPiece {
     pub fn cw<R: Row>(&mut self, board: &Board<R>) -> bool {
         let mut target = self.kind;
         target.cw();
-        self.rotate(target, board)
+        self.rotate(target, board, false)
     }
 
     pub fn ccw<R: Row>(&mut self, board: &Board<R>) -> bool {
         let mut target = self.kind;
         target.ccw();
-        self.rotate(target, board)
+        self.rotate(target, board, true)
     }
 
     pub fn same_location(&self, other: &Self) -> bool {
@@ -163,7 +145,6 @@ pub struct PieceState(pub Piece, pub RotationState);
 #[derive(Copy, Clone, Debug, Hash, Eq, PartialEq, Serialize, Deserialize)]
 pub enum TspinStatus {
     None,
-    Mini,
     Full,
 }
 
@@ -185,26 +166,6 @@ impl RotationState {
             West  => *self = South,
             South => *self = East,
             East  => *self = North
-        }
-    }
-
-    pub fn mini_tspin_corners(self) -> [(i32, i32); 2] {
-        use RotationState::*;
-        match self {
-            North => [(-1, 1),  (1, 1)],
-            East  => [(1, 1),   (1, -1)],
-            South => [(1, -1),  (-1, -1)],
-            West  => [(-1, -1), (-1, 1)]
-        }
-    }
-
-    pub fn non_mini_tspin_corners(self) -> [(i32, i32); 2] {
-        use RotationState::*;
-        match self {
-            South => [(-1, 1),  (1, 1)],
-            West  => [(1, 1),   (1, -1)],
-            North => [(1, -1),  (-1, -1)],
-            East  => [(-1, -1), (-1, 1)]
         }
     }
 }
@@ -286,32 +247,6 @@ impl PieceState {
                 Piece::Z => enum_set!(Left),
             })),
         ]
-    }
-
-    /// Returns the five rotation points associated with this piece and orientation.
-    /// 
-    /// Note that the first point is always (0, 0). We include it here to make
-    /// looping over the possible kicks easier.
-    pub fn rotation_points(&self) -> [(i32, i32); 5] {
-        use Piece::*;
-        use RotationState::*;
-        match (self.0, self.1) {
-            (O, North) => [( 0,  0); 5],
-            (O, East)  => [( 0, -1); 5],
-            (O, South) => [(-1, -1); 5],
-            (O, West)  => [(-1,  0); 5],
-
-            (I, North) => [( 0, 0), (-1, 0), ( 2, 0), (-1,  0), ( 2,  0)],
-            (I, East)  => [(-1, 0), ( 0, 0), ( 0, 0), ( 0,  1), ( 0, -2)],
-            (I, South) => [(-1, 1), ( 1, 1), (-2, 1), ( 1,  0), (-2,  0)],
-            (I, West)  => [( 0, 1), ( 0, 1), ( 0, 1), ( 0, -1), ( 0,  2)],
-
-            // The rotation points for T, L, J, S, Z are all the same.
-            (_, North) => [(0, 0); 5],
-            (_, East)  => [(0, 0), ( 1, 0), ( 1, -1), (0, 2), ( 1, 2)],
-            (_, South) => [(0, 0); 5],
-            (_, West)  => [(0, 0), (-1, 0), (-1, -1), (0, 2), (-1, 2)]
-        }
     }
 }
 

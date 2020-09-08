@@ -213,7 +213,7 @@ fn read_options() -> Result<Options, Box<dyn std::error::Error>> {
 #[derive(Serialize, Deserialize, Clone, Debug)]
 struct Options {
     p1: PlayerConfig<cold_clear::evaluation::Standard>,
-    p2: PlayerConfig<cold_clear::evaluation::Standard>
+    p2: PlayerConfig<cold_clear::evaluation::changed::Standard>
 }
 
 impl Default for Options {

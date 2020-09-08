@@ -32,12 +32,10 @@ pub struct Standard {
     pub tspin1: i32,
     pub tspin2: i32,
     pub tspin3: i32,
-    pub mini_tspin1: i32,
-    pub mini_tspin2: i32,
+    pub tspin4: i32,
     pub perfect_clear: i32,
     pub combo_garbage: i32,
     pub move_time: i32,
-    pub wasted_t: i32,
 
     pub use_bag: bool,
     pub timed_jeopardy: bool,
@@ -68,17 +66,15 @@ impl Default for Standard {
             well_column: [20, 23, 20, 50, 59, 21, 59, 10, -10, 24],
 
             move_time: -3,
-            wasted_t: -152,
             b2b_clear: 104,
             clear1: -143,
             clear2: -100,
             clear3: -58,
             clear4: 390,
-            tspin1: 121,
+            tspin1: 181,
             tspin2: 410,
             tspin3: 602,
-            mini_tspin1: -158,
-            mini_tspin2: -93,
+            tspin4: 800,
             perfect_clear: 999,
             combo_garbage: 150,
 
@@ -119,12 +115,10 @@ impl Standard {
             tspin1: 131,
             tspin2: 392,
             tspin3: 628,
-            mini_tspin1: -188,
-            mini_tspin2: -682,
+            tspin4: 800,
             perfect_clear: 991,
             combo_garbage: 272,
             move_time: -1,
-            wasted_t: -147,
             use_bag: true,
             timed_jeopardy: false,
             stack_pc_damage: false,
@@ -206,20 +200,10 @@ impl Evaluator for Standard {
                 PlacementKind::Tspin3 => {
                     acc_eval += self.tspin3;
                 }
-                PlacementKind::MiniTspin1 => {
-                    acc_eval += self.mini_tspin1;
-                }
-                PlacementKind::MiniTspin2 => {
-                    acc_eval += self.mini_tspin2;
+                PlacementKind::Tspin4 => {
+                    acc_eval += self.tspin4;
                 }
                 _ => {}
-            }
-        }
-
-        if placed == Piece::T {
-            match lock.placement_kind {
-                PlacementKind::Tspin1 | PlacementKind::Tspin2 | PlacementKind::Tspin3 => {}
-                _ => acc_eval += self.wasted_t
             }
         }
 

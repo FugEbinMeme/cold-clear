@@ -151,15 +151,12 @@ impl<R: Row> Board<R> {
     /// 
     /// Clears lines, detects clear kind, calculates garbage, maintains combo and back-to-back
     /// state, detects perfect clears, detects lockout.
+    /// ASC doesn't have lockout death, also I hate it, so I've removed it
     pub fn lock_piece(&mut self, piece: FallingPiece) -> LockResult {
-        let mut locked_out = true;
         for &(x, y) in &piece.cells() {
             self.cells[y as usize].set(x as usize, piece.kind.0.color());
             if self.column_heights[x as usize] < y+1 {
                 self.column_heights[x as usize] = y+1;
-            }
-            if y < 20 {
-                locked_out = false;
             }
         }
         let cleared = self.remove_cleared_lines();
@@ -193,11 +190,11 @@ impl<R: Row> Board<R> {
 
         let perfect_clear = self.column_heights == [0; 10];
         if perfect_clear {
-            garbage_sent = 10;
+            garbage_sent += 10;
         }
 
         let l = LockResult {
-            placement_kind, garbage_sent, perfect_clear, locked_out,
+            placement_kind, garbage_sent, perfect_clear,
             combo: if self.combo == 0 { None } else { Some(self.combo-1) },
             b2b: did_b2b,
             cleared_lines: cleared
