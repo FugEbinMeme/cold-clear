@@ -387,7 +387,9 @@ impl SpawnRule {
                     x: 4, y: 22,
                     tspin: TspinStatus::None
                 };
-                return Some(spawned);
+                if !board.obstructed(&spawned) {
+                    return Some(spawned);
+                }
             }
         }
         None
