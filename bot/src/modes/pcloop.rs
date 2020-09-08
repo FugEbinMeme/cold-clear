@@ -79,7 +79,7 @@ impl PcLooper {
             for &placement in &soln {
                 let placements = crate::moves::find_moves(
                     &b,
-                    libtetris::SpawnRule::Row19Or20.spawn(placement.kind.0, &b).unwrap(),
+                    libtetris::SpawnRule::Asc.spawn(placement.kind.0, &b).unwrap(),
                     self.mode
                 );
 

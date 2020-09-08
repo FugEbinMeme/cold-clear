@@ -349,7 +349,8 @@ impl Direction {
 #[derive(Copy, Clone, Debug, Hash, Eq, PartialEq, Serialize, Deserialize)]
 pub enum SpawnRule {
     Row19Or20,
-    Row21AndFall
+    Row21AndFall,
+    Asc
 }
 
 impl SpawnRule {
@@ -379,6 +380,14 @@ impl SpawnRule {
                     spawned.shift(board, 0, -1);
                     return Some(spawned);
                 }
+            }
+            SpawnRule::Asc => {
+                let spawned = FallingPiece {
+                    kind: PieceState(piece, RotationState::North),
+                    x: 4, y: 22,
+                    tspin: TspinStatus::None
+                };
+                return Some(spawned);
             }
         }
         None
