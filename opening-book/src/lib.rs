@@ -271,7 +271,7 @@ pub fn possible_sequences(
 
 impl Position {
     pub fn advance(&self, mv: FallingPiece) -> (Position, f64) {
-        let mut field = [[false; 10]; 40];
+        let mut field = [[false; 10]; 25];
         for y in 0..10 {
             for x in 0..10 {
                 field[y][x] = self.rows[y] & 1<<x != 0;

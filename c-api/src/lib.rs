@@ -229,7 +229,7 @@ fn convert_from_c_weights(weights: &CCWeights) -> cold_clear::evaluation::Standa
 }
 
 #[no_mangle]
-extern "C" fn cc_launch_with_board_async(options: &CCOptions, weights: &CCWeights, field: &[[bool; 10]; 40], 
+extern "C" fn cc_launch_with_board_async(options: &CCOptions, weights: &CCWeights, field: &[[bool; 10]; 25], 
     bag_remain: u32, hold: *mut CCPiece, b2b: bool, combo: u32) -> *mut CCAsyncBot {
     Box::into_raw(Box::new(cold_clear::Interface::launch(
         libtetris::Board::new_with_state(*field, EnumSet::from_bits(bag_remain as u128), convert_hold(hold), b2b, combo),
@@ -256,7 +256,7 @@ extern "C" fn cc_destroy_async(bot: *mut CCAsyncBot) {
 
 #[no_mangle]
 extern "C" fn cc_reset_async(
-    bot: &mut CCAsyncBot, field: &[[bool; 10]; 40], b2b: bool, combo: u32
+    bot: &mut CCAsyncBot, field: &[[bool; 10]; 25], b2b: bool, combo: u32
 ) {
     bot.reset(*field, b2b, combo);
 }

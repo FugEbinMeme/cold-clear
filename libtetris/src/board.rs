@@ -8,7 +8,7 @@ use crate::*;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Board<R=u16> {
-    cells: ArrayVec<[R; 40]>,
+    cells: ArrayVec<[R; 25]>,
     column_heights: [i32; 10],
     pub combo: u32,
     pub b2b_bonus: bool,
@@ -32,7 +32,7 @@ impl<R: Row> Board<R> {
     /// Creates a blank board with an empty queue.
     pub fn new() -> Self {
         Board {
-            cells: [*R::EMPTY; 40].into(),
+            cells: [*R::EMPTY; 25].into(),
             column_heights: [0; 10],
             combo: 0,
             b2b_bonus: false,
@@ -43,9 +43,9 @@ impl<R: Row> Board<R> {
     }
 
     /// Creates a board with existing field, remain pieces in the bag, hold piece, back-to-back status and combo count.
-    pub fn new_with_state(field: [[bool; 10]; 40], bag_remain: EnumSet<Piece>, hold: Option<Piece>, b2b: bool, combo: u32) -> Self {
+    pub fn new_with_state(field: [[bool; 10]; 25], bag_remain: EnumSet<Piece>, hold: Option<Piece>, b2b: bool, combo: u32) -> Self {
         let mut board = Board {
-            cells: [*R::EMPTY; 40].into(),
+            cells: [*R::EMPTY; 25].into(),
             column_heights: [0; 10],
             combo: combo,
             b2b_bonus: b2b,
@@ -116,13 +116,13 @@ impl<R: Row> Board<R> {
     }
 
     pub fn occupied(&self, x: i32, y: i32) -> bool {
-        x < 0 || y < 0 || x >= 10 || y >= 40 || (self.cells[y as usize].get(x as usize))
+        x < 0 || y < 0 || x >= 10 || y >= 25 || (self.cells[y as usize].get(x as usize))
     }
 
     pub fn get_row(&self, y: i32) -> &R {
         if y < 0 {
             R::SOLID
-        } else if y >= 40 {
+        } else if y >= 25 {
             R::EMPTY
         } else {
             &self.cells[y as usize]
@@ -260,10 +260,10 @@ impl<R: Row> Board<R> {
         }
     }
 
-    pub fn set_field(&mut self, field: [[bool; 10]; 40]) {
+    pub fn set_field(&mut self, field: [[bool; 10]; 25]) {
         self.cells.clear();
         self.column_heights = [0; 10];
-        for y in 0..40 {
+        for y in 0..25 {
             let mut r = *R::EMPTY;
             for x in 0..10 {
                 if field[y][x] {
@@ -275,9 +275,9 @@ impl<R: Row> Board<R> {
         }
     }
 
-    pub fn get_field(&self) -> [[bool; 10]; 40] {
-        let mut field = [[false; 10]; 40];
-        for y in 0..40 {
+    pub fn get_field(&self) -> [[bool; 10]; 25] {
+        let mut field = [[false; 10]; 25];
+        for y in 0..25 {
             for x in 0..10 {
                 field[y][x] = self.occupied(x as i32, y as i32)
             }

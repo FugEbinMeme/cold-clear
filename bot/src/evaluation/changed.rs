@@ -292,7 +292,7 @@ impl Evaluator for Standard {
         }
 
         if self.row_transitions != 0 {
-            transient_eval += self.row_transitions * (0..40)
+            transient_eval += self.row_transitions * (0..25)
                 .map(|y| *board.get_row(y))
                 .map(|r| (r | 0b1_00000_00000) ^ (1 | r << 1))
                 .map(|d| d.count_ones() as i32)

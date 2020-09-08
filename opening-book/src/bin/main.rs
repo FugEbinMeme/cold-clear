@@ -10,7 +10,7 @@ fn main() {
             Err(_) => continue
         };
 
-        let mut field = [[false; 10]; 40];
+        let mut field = [[false; 10]; 25];
         for y in 0..10 {
             for x in 0..10 {
                 field[y][x] = fumen.pages[0].field[y][x] != fumen::CellColor::Empty;
@@ -52,7 +52,7 @@ fn main() {
         } else {
             let mut placements: Vec<_> = fumen.pages.iter().map(|p| {
                 let mut b = Board::<u16>::new();
-                let mut f = [[false; 10]; 40];
+                let mut f = [[false; 10]; 25];
                 for y in 0..10 {
                     for x in 0..10 {
                         f[y][x] = p.field[y][x] != fumen::CellColor::Empty;

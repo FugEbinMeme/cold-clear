@@ -7,7 +7,7 @@ use arrayvec::ArrayVec;
 use crate::res::Resources;
 
 pub struct PlayerDrawState {
-    board: ArrayVec<[ColoredRow; 40]>,
+    board: ArrayVec<[ColoredRow; 25]>,
     state: State,
     statistics: Statistics,
     garbage_queue: u32,
@@ -31,7 +31,7 @@ enum State {
 impl PlayerDrawState {
     pub fn new(queue: impl IntoIterator<Item=Piece>, name: String) -> Self {
         PlayerDrawState {
-            board: ArrayVec::from([*ColoredRow::EMPTY; 40]),
+            board: ArrayVec::from([*ColoredRow::EMPTY; 25]),
             state: State::Delay,
             statistics: Statistics::default(),
             garbage_queue: 0,
@@ -122,7 +122,7 @@ impl PlayerDrawState {
                     }
                 }
                 Event::GarbageAdded(columns) => {
-                    self.board.truncate(40 - columns.len());
+                    self.board.truncate(25 - columns.len());
                     for &col in columns {
                         let mut row = *ColoredRow::EMPTY;
                         for x in 0..10 {

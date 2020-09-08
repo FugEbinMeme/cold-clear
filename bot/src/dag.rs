@@ -563,7 +563,7 @@ impl<E: Evaluation<R> + 'static, R: Clone + 'static> DagState<E, R> {
         plan
     }
 
-    pub fn reset(&mut self, field: [[bool; 10]; 40], b2b: bool, combo: u32) -> Option<i32> {
+    pub fn reset(&mut self, field: [[bool; 10]; 25], b2b: bool, combo: u32) -> Option<i32> {
         let garbage_lines;
         if b2b == self.board.b2b_bonus && combo == self.board.combo {
             let mut b = Board::<u16>::new();
@@ -573,7 +573,7 @@ impl<E: Evaluation<R> + 'static, R: Clone + 'static> DagState<E, R> {
                 .map(|(&y1, &y2)| y2 - y1)
                 .min().unwrap();
             let mut is_garbage_receive = true;
-            for y in 0..(40 - dif) {
+            for y in 0..(25 - dif) {
                 if b.get_row(y + dif) != self.board.get_row(y) {
                     is_garbage_receive = false;
                     break;
@@ -717,9 +717,9 @@ fn build_children<'arena, E: Evaluation<R> + 'static, R: Clone + 'static>(
     );
     parent_arena.alloc_slice_fill_iter(children.into_iter().enumerate().map(
         |(i, data)| {
-            // this arrayvec will almost always be shorter than 40 elements,
+            // this arrayvec will almost always be shorter than 25 elements,
             // since it won't store the upper empty rows. this is to save memory.
-            let mut simple_grid = ArrayVec::<[_; 40]>::new();
+            let mut simple_grid = ArrayVec::<[_; 25]>::new();
             let terrain_height = data.board.column_heights().iter().copied().max().unwrap();
             for y in 0..terrain_height {
                 simple_grid.push(*data.board.get_row(y));

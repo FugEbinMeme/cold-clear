@@ -40,7 +40,7 @@ pub struct Options {
 enum BotMsg {
     Reset {
         #[serde(with = "BigArray")]
-        field: [[bool; 10]; 40],
+        field: [[bool; 10]; 25],
         b2b: bool,
         combo: u32
     },
@@ -88,4 +88,4 @@ impl Default for Options {
 }
 
 use serde_big_array::big_array;
-big_array!( BigArray; 40, );
+big_array!( BigArray; 25, );
