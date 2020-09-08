@@ -63,7 +63,7 @@ impl BattleUi {
 
         res.sprite_batch.render(Transform3D::ortho(
             0.0, 40.0,
-            0.0, 23.0,
+            0.0, 28.0,
             -1.0, 1.0
         ));
     }

@@ -141,7 +141,7 @@ impl PlayerDrawState {
 
     pub fn draw(&self, res: &mut Resources, offset_x: f32) {
         // Draw the playfield
-        for y in 0..21 {
+        for y in 0..25 {
             for x in 0..10 {
                 let cell_color = self.board[y].cell_color(x);
                 res.sprite_batch.draw(
@@ -202,26 +202,26 @@ impl PlayerDrawState {
         }
 
         // Draw hold piece and next queue
-        res.text.draw_text("Hold", offset_x + 2.0, 21.85, Alignment::Center, [0xFF; 4], 0.7, 0);
+        res.text.draw_text("Hold", offset_x + 2.0, 26.85, Alignment::Center, [0xFF; 4], 0.7, 0);
         if let Some(piece) = self.hold_piece {
             res.sprite_batch.draw(
                 &res.sprites.piece[piece as usize],
-                point2(offset_x + 2.0, 20.75),
+                point2(offset_x + 2.0, 25.5),
                 cell_color_to_color(piece.color())
             );
         }
-        res.text.draw_text("Next", offset_x + 15.0, 21.85, Alignment::Center, [0xFF; 4], 0.7, 0);
+        res.text.draw_text("Next", offset_x + 15.0, 26.85, Alignment::Center, [0xFF; 4], 0.7, 0);
         for (i, &piece) in self.next_queue.iter().enumerate() {
             res.sprite_batch.draw(
                 &res.sprites.piece[piece as usize],
-                point2(offset_x + 15.0, 20.75 - 2.0 * i as f32),
+                point2(offset_x + 15.0, 25.5 - 2.0 * i as f32),
                 cell_color_to_color(piece.color())
             );
         }
 
         // Draw statistics
         res.text.draw_text(
-            "Statistics", offset_x + 1.75, 19.1, Alignment::Center, [0xFF; 4], 0.6, 0
+            "Statistics", offset_x + 1.75, 24.1, Alignment::Center, [0xFF; 4], 0.6, 0
         );
         let seconds = self.game_time as f32 / 60.0;
         let mut lines = vec![
@@ -271,8 +271,8 @@ impl PlayerDrawState {
             values.push_str(&value);
             values.push('\n');
         }
-        res.text.draw_text(&labels, offset_x+0.2, 18.4, Alignment::Left, [0xFF; 4], 0.45, 0);
-        res.text.draw_text(&values, offset_x+3.3, 18.4, Alignment::Right, [0xFF; 4], 0.45, 0);
+        res.text.draw_text(&labels, offset_x+0.2, 23.4, Alignment::Left, [0xFF; 4], 0.45, 0);
+        res.text.draw_text(&values, offset_x+3.3, 23.4, Alignment::Right, [0xFF; 4], 0.45, 0);
 
         if let Some(ref info) = self.info {
             let mut has_pc = false;
@@ -283,8 +283,8 @@ impl PlayerDrawState {
             }
 
             // Draw bot plan
-            let mut y_map = [0; 40];
-            for i in 0..40 {
+            let mut y_map = [0; 25];
+            for i in 0..25 {
                 y_map[i] = i as i32;
             }
             for (placement, lock) in info.plan() {
@@ -295,9 +295,9 @@ impl PlayerDrawState {
                         cell_color_to_color(placement.kind.0.color())
                     );
                 }
-                let mut new_map = [0; 40];
+                let mut new_map = [0; 25];
                 let mut j = 0;
-                for i in 0..40 {
+                for i in 0..25 {
                     if !lock.cleared_lines.contains(&i) {
                         new_map[j] = y_map[i as usize];
                         j += 1;
@@ -315,7 +315,7 @@ impl PlayerDrawState {
         // Draw player name
         res.text.draw_text(
             &self.name,
-            offset_x + 15.0, 21.0 - 2.0 * self.next_queue.len() as f32,
+            offset_x + 15.0, 25.0 - 2.0 * self.next_queue.len() as f32,
             Alignment::Center,
             [0xFF; 4], 0.45, 0
         );

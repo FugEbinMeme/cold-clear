@@ -60,7 +60,7 @@ impl game_util::Game for CCGui<'_> {
         }
 
         let dpi = self.context.window().get_hidpi_factor();
-        const TARGET_ASPECT: f64 = 40.0 / 23.0;
+        const TARGET_ASPECT: f64 = 40.0 / 28.0;
         let vp = if self.lsize.width / self.lsize.height < TARGET_ASPECT {
             LogicalSize::new(self.lsize.width, self.lsize.width / TARGET_ASPECT)
         } else {
