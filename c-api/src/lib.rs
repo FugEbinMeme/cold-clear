@@ -54,7 +54,6 @@ cenum! {
 
     enum CCTspinStatus => libtetris::TspinStatus {
         CC_NONE => None,
-        CC_MINI => Mini,
         CC_FULL => Full
     }
 
@@ -151,12 +150,10 @@ struct CCWeights {
     tspin1: i32,
     tspin2: i32,
     tspin3: i32,
-    mini_tspin1: i32,
-    mini_tspin2: i32,
+    tspin4: i32,
     perfect_clear: i32,
     combo_garbage: i32,
     move_time: i32,
-    wasted_t: i32,
 
     use_bag: bool,
     timed_jeopardy: bool,
@@ -214,12 +211,10 @@ fn convert_from_c_weights(weights: &CCWeights) -> cold_clear::evaluation::Standa
         tspin1: weights.tspin1,
         tspin2: weights.tspin2,
         tspin3: weights.tspin3,
-        mini_tspin1: weights.mini_tspin1,
-        mini_tspin2: weights.mini_tspin2,
+        tspin4: weights.tspin4,
         perfect_clear: weights.perfect_clear,
         combo_garbage: weights.combo_garbage,
         move_time: weights.move_time,
-        wasted_t: weights.wasted_t,
 
         use_bag: weights.use_bag,
         timed_jeopardy: weights.timed_jeopardy,
@@ -427,12 +422,10 @@ fn convert_weights(w: cold_clear::evaluation::Standard) -> CCWeights {
         tspin1: w.tspin1,
         tspin2: w.tspin2,
         tspin3: w.tspin3,
-        mini_tspin1: w.mini_tspin1,
-        mini_tspin2: w.mini_tspin2,
+        tspin4: w.tspin4,
         perfect_clear: w.perfect_clear,
         combo_garbage: w.combo_garbage,
         move_time: w.move_time,
-        wasted_t: w.wasted_t,
 
         use_bag: w.use_bag,
         timed_jeopardy: w.timed_jeopardy,

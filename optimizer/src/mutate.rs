@@ -48,7 +48,6 @@ impl Mutateable for Standard {
             ],
 
             move_time: thread_rng().gen_range(-999, 1000),
-            wasted_t: thread_rng().gen_range(-999, 1000),
             b2b_clear: thread_rng().gen_range(-999, 1000),
             clear1: thread_rng().gen_range(-999, 1000),
             clear2: thread_rng().gen_range(-999, 1000),
@@ -57,14 +56,13 @@ impl Mutateable for Standard {
             tspin1: thread_rng().gen_range(-999, 1000),
             tspin2: thread_rng().gen_range(-999, 1000),
             tspin3: thread_rng().gen_range(-999, 1000),
-            mini_tspin1: thread_rng().gen_range(-999, 1000),
-            mini_tspin2: thread_rng().gen_range(-999, 1000),
+            tspin4: thread_rng().gen_range(-999, 1000),
             perfect_clear: thread_rng().gen_range(-999, 1000),
             combo_garbage: thread_rng().gen_range(-999, 1000),
 
             use_bag: true,
             timed_jeopardy: true,
-            stack_pc_damage: false,
+            stack_pc_damage: true,
             sub_name: Some(sub_name)
         }
     }
@@ -107,7 +105,6 @@ impl Mutateable for Standard {
             ],
 
             move_time: crossover_gene(parent1.move_time, parent2.move_time),
-            wasted_t: crossover_gene(parent1.wasted_t, parent2.wasted_t),
             b2b_clear: crossover_gene(parent1.b2b_clear, parent2.b2b_clear),
             clear1: crossover_gene(parent1.clear1, parent2.clear1),
             clear2: crossover_gene(parent1.clear2, parent2.clear2),
@@ -116,14 +113,13 @@ impl Mutateable for Standard {
             tspin1: crossover_gene(parent1.tspin1, parent2.tspin1),
             tspin2: crossover_gene(parent1.tspin2, parent2.tspin2),
             tspin3: crossover_gene(parent1.tspin3, parent2.tspin3),
-            mini_tspin1: crossover_gene(parent1.mini_tspin1, parent2.mini_tspin1),
-            mini_tspin2: crossover_gene(parent1.mini_tspin2, parent2.mini_tspin2),
+            tspin4: crossover_gene(parent1.tspin4, parent2.tspin4),
             perfect_clear: crossover_gene(parent1.perfect_clear, parent2.perfect_clear),
             combo_garbage: crossover_gene(parent1.combo_garbage, parent2.combo_garbage),
 
             use_bag: true,
             timed_jeopardy: true,
-            stack_pc_damage: false,
+            stack_pc_damage: true,
             sub_name: Some(sub_name)
         }
     }
