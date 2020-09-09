@@ -92,6 +92,13 @@ pub fn find_moves(
                 PieceMovement::Ccw, false
             );
 
+            attempt(
+                board, &moves, position,
+                &mut checked, &mut check_queue,
+                mode, fast_mode,
+                PieceMovement::Flip, false
+            );
+
             if mode == MovementMode::ZeroG {
                 attempt(
                     board, &moves, position,
