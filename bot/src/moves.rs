@@ -1,4 +1,4 @@
-use libtetris::{ Board, FallingPiece, Piece, RotationState, TspinStatus, PieceMovement };
+use libtetris::{ Board, FallingPiece, TspinStatus, PieceMovement };
 use arrayvec::ArrayVec;
 use std::collections::{ HashMap, HashSet };
 use serde::{ Serialize, Deserialize };
@@ -137,7 +137,7 @@ fn lock_check(
     moves: InputList
 ) {
     let mut cells = piece.cells();
-    if cells.iter().all(|&(_, y)| y >= 20) {
+    if cells.iter().all(|&(_, y)| y >= 23) {
         return
     }
     cells.sort();
@@ -203,109 +203,4 @@ fn attempt(
         }
     }
     piece
-}
-
-fn zero_g_starts(p: Piece) -> Vec<(FallingPiece, InputList)> {
-    use Piece::*;
-    use RotationState::*;
-    use PieceMovement::*;
-    match p {
-        O => vec![
-            start(O, North, 4, &[], 0),
-            start(O, North, 3, &[Left], 1),
-            start(O, North, 5, &[Right], 1),
-            start(O, North, 2, &[Left, Left], 3),
-            start(O, North, 6, &[Right, Right], 3),
-            start(O, North, 1, &[Left, Left, Left], 5),
-            start(O, North, 7, &[Right, Right, Right], 5),
-            start(O, North, 0, &[Left, Left, Left, Left], 7),
-            start(O, North, 8, &[Right, Right, Right, Right], 7),
-        ],
-        I => vec![
-            start(I, North, 4, &[], 0),
-            start(I, North, 3, &[Left], 1),
-            start(I, North, 5, &[Right], 1),
-            start(I, North, 2, &[Left, Left], 3),
-            start(I, North, 6, &[Right, Right], 3),
-            start(I, North, 1, &[Left, Left, Left], 5),
-            start(I, North, 7, &[Right, Right, Right], 5),
-            start(I, West, 4, &[Ccw], 1),
-            start(I, West, 3, &[Left, Ccw], 2),
-            start(I, West, 2, &[Left, Ccw, Left], 3),
-            start(I, West, 1, &[Left, Ccw, Left, Left], 5),
-            start(I, West, 0, &[Left, Ccw, Left, Left, Left], 7),
-            start(I, West, 5, &[Right, Ccw], 2),
-            start(I, West, 6, &[Right, Ccw, Right], 3),
-            start(I, West, 7, &[Right, Ccw, Right, Right], 5),
-            start(I, West, 8, &[Right, Ccw, Right, Right, Right], 7),
-            start(I, West, 9, &[Right, Ccw, Right, Right, Right, Right], 9),
-            start(I, East, 5, &[Cw], 1),
-            start(I, East, 4, &[Left, Cw], 2),
-            start(I, East, 3, &[Left, Cw, Left], 3),
-            start(I, East, 2, &[Left, Cw, Left, Left], 5),
-            start(I, East, 1, &[Left, Cw, Left, Left, Left], 7),
-            start(I, East, 0, &[Left, Cw, Left, Left, Left, Left], 9),
-            start(I, East, 6, &[Right, Cw], 2),
-            start(I, East, 7, &[Right, Cw, Right], 3),
-            start(I, East, 8, &[Right, Cw, Right, Right], 5),
-            start(I, East, 9, &[Right, Cw, Right, Right, Right], 7),
-            start(I, South, 5, &[Cw, Cw], 3),
-            start(I, South, 4, &[Cw, Left, Cw], 3),
-            start(I, South, 6, &[Cw, Right, Cw], 3),
-            start(I, South, 3, &[Cw, Left, Cw, Left], 4),
-            start(I, South, 7, &[Cw, Right, Cw, Right], 4),
-            start(I, South, 2, &[Left, Cw, Left, Cw, Left], 5),
-            start(I, South, 8, &[Right, Cw, Right, Cw, Right], 5),
-        ],
-        _ => vec![
-            start(p, North, 4, &[], 0),
-            start(p, North, 3, &[Left], 1),
-            start(p, North, 5, &[Right], 1),
-            start(p, North, 2, &[Left, Left], 3),
-            start(p, North, 6, &[Right, Right], 3),
-            start(p, North, 1, &[Left, Left, Left], 5),
-            start(p, North, 7, &[Right, Right, Right], 5),
-            start(p, North, 8, &[Right, Right, Right, Right], 7),
-            start(p, West, 4, &[Ccw], 1),
-            start(p, West, 3, &[Left, Ccw], 2),
-            start(p, West, 5, &[Right, Ccw], 2),
-            start(p, West, 2, &[Left, Ccw, Left], 3),
-            start(p, West, 6, &[Right, Ccw, Right], 3),
-            start(p, West, 1, &[Left, Ccw, Left, Left], 5),
-            start(p, West, 7, &[Right, Ccw, Right, Right], 5),
-            start(p, West, 8, &[Right, Ccw, Right, Right, Right], 7),
-            start(p, West, 9, &[Right, Ccw, Right, Right, Right, Right], 9),
-            start(p, East, 4, &[Cw], 1),
-            start(p, East, 3, &[Left, Cw], 2),
-            start(p, East, 5, &[Right, Cw], 2),
-            start(p, East, 2, &[Left, Cw, Left], 3),
-            start(p, East, 6, &[Right, Cw, Right], 3),
-            start(p, East, 1, &[Left, Cw, Left, Left], 5),
-            start(p, East, 7, &[Right, Cw, Right, Right], 5),
-            start(p, East, 0, &[Left, Cw, Left, Left, Left], 7),
-            start(p, East, 8, &[Right, Cw, Right, Right, Right], 7),
-            start(p, South, 4, &[Cw, Cw], 3),
-            start(p, South, 3, &[Cw, Left, Cw], 3),
-            start(p, South, 5, &[Cw, Right, Cw], 3),
-            start(p, South, 2, &[Cw, Left, Cw, Left], 4),
-            start(p, South, 6, &[Cw, Right, Cw, Right], 4),
-            start(p, South, 1, &[Left, Cw, Left, Cw, Left], 5),
-            start(p, South, 7, &[Right, Cw, Right, Cw, Right], 5),
-            start(p, South, 8, &[Right, Cw, Right, Cw, Right, Right], 7),
-        ]
-    }
-}
-
-fn start(
-    p: Piece, r: RotationState, x: i32, i: &[PieceMovement], time: u32
-) -> (FallingPiece, InputList) {
-    (FallingPiece {
-        kind: libtetris::PieceState(p, r),
-        x,
-        y: 19,
-        tspin: TspinStatus::None
-    }, InputList {
-        movements: i.iter().copied().collect(),
-        time
-    })
 }

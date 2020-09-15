@@ -1,4 +1,4 @@
-use libtetris::{ LockResult, Board, Piece };
+use libtetris::{ LockResult, Board};
 use crate::dag::MoveCandidate;
 
 mod standard;
@@ -12,7 +12,7 @@ pub trait Evaluator : Send + Sync {
     fn name(&self) -> String;
 
     fn evaluate(
-        &self, lock: &LockResult, board: &Board, move_time: u32, placed: Piece
+        &self, lock: &LockResult, board: &Board, move_time: u32
     ) -> (Self::Value, Self::Reward);
 
     fn pick_move(
@@ -43,9 +43,9 @@ impl<T: Evaluator> Evaluator for std::sync::Arc<T> {
     }
 
     fn evaluate(
-        &self, lock: &LockResult, board: &Board, move_time: u32, placed: Piece
+        &self, lock: &LockResult, board: &Board, move_time: u32
     ) -> (T::Value, T::Reward) {
-        (**self).evaluate(lock, board, move_time, placed)
+        (**self).evaluate(lock, board, move_time)
     }
 
     fn pick_move(

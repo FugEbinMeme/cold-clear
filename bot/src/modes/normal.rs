@@ -261,14 +261,12 @@ impl Thinker {
         hold: bool
     ) {
         for mv in crate::moves::find_moves(&board, spawned, self.options.mode) {
-            let can_be_hd = board.above_stack(&mv.location) &&
-            board.column_heights().iter().all(|&y| y < 18);
             let mut result = board.clone();
             let lock = result.lock_piece(mv.location);
             
             let move_time = mv.inputs.time + if hold { 1 } else { 0 };
             let (evaluation, reward) = eval.evaluate(
-                &lock, &result, move_time, spawned.kind.0
+                &lock, &result, move_time
             );
             children.push(ChildData {
                 evaluation,

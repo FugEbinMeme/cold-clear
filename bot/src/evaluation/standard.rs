@@ -162,7 +162,7 @@ impl Evaluator for Standard {
     }
 
     fn evaluate(
-        &self, lock: &LockResult, board: &Board, move_time: u32, placed: Piece
+        &self, lock: &LockResult, board: &Board, move_time: u32
     ) -> (Value, Reward) {
         let mut transient_eval = 0;
         let mut acc_eval = 0;

@@ -76,7 +76,7 @@ impl Default for Options {
     fn default() -> Self {
         Options {
             mode: crate::moves::MovementMode::ZeroG,
-            spawn_rule: SpawnRule::Row19Or20,
+            spawn_rule: SpawnRule::Asc,
             use_hold: true,
             speculate: true,
             pcloop: false,
