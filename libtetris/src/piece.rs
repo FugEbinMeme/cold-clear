@@ -305,6 +305,18 @@ impl Piece {
         }
     }
 
+    pub fn to_str(self) -> &'static str {
+        match self {
+            Piece::I => "I",
+            Piece::T => "T",
+            Piece::O => "O",
+            Piece::L => "L",
+            Piece::J => "J",
+            Piece::S => "S",
+            Piece::Z => "Z",
+        }
+    }
+
     pub fn color(self) -> CellColor {
         match self {
             Piece::I => CellColor::I,

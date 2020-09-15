@@ -17,7 +17,7 @@ pub struct PlayerDrawState {
     game_time: u32,
     combo_splash: Option<(u32, u32)>,
     back_to_back_splash: Option<u32>,
-    clear_splash: Option<(&'static str, u32)>,
+    clear_splash: Option<(&'static str, &'static str, u32)>,
     name: String,
     info: Option<cold_clear::Info>
 }
@@ -70,7 +70,7 @@ impl PlayerDrawState {
                 *timer -= 1;
             }
         }
-        if let Some((_, timer)) = &mut self.clear_splash {
+        if let Some((_, _, timer)) = &mut self.clear_splash {
             if *timer == 0 {
                 self.clear_splash = None;
             } else {
@@ -97,10 +97,10 @@ impl PlayerDrawState {
                         self.combo_splash = Some((combo, 75));
                     }
                     if locked.perfect_clear {
-                        self.clear_splash = Some(("Perfect Clear", 135));
+                        self.clear_splash = Some(("", "Perfect Clear", 135));
                         self.back_to_back_splash = None;
                     } else if locked.placement_kind.is_hard() {
-                        self.clear_splash = Some((locked.placement_kind.name(), 75));
+                        self.clear_splash = Some((piece.kind.0.to_str(), locked.placement_kind.name(), 75));
                     }
                 }
                 Event::PieceHeld(piece) => {
@@ -337,9 +337,9 @@ impl PlayerDrawState {
                 [0xFF, 0xFF, 0xFF, (timer.min(15) * 0xFF / 15) as u8], 0.75, 0
             );
         }
-        if let Some((txt, timer)) = self.clear_splash {
+        if let Some((piece, txt, timer)) = self.clear_splash {
             res.text.draw_text(
-                txt,
+                &format!("{} {}", piece, txt),
                 offset_x + 8.5, 0.65,
                 Alignment::Center,
                 [0xFF, 0xFF, 0xFF, (timer.min(15) * 0xFF / 15) as u8], 0.75, 0
