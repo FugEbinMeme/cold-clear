@@ -54,6 +54,6 @@ impl<'de> serde::Deserialize<'de> for Controller {
                 })
             }
         }
-        deserializer.deserialize_u8(ControllerDeserializer)
+        deserializer.deserialize_u16(ControllerDeserializer)
     }
 }

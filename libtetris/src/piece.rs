@@ -72,13 +72,15 @@ impl FallingPiece {
         }
     }
 
-    fn rotate<R: Row>(&mut self, target: PieceState, board: &Board<R>, is_ccw: bool) -> bool {
+    fn rotate<R: Row>(&mut self, target: PieceState, board: &Board<R>, rot_dir: RotateDirection) -> bool {
         let initial = *self;
         self.kind = target;
-        let kicks = if is_ccw {
-            [(0, 0), (1, 0), (0, -1), (1, -1), (0, -2), (1, -2), (2, 0), (2, -1), (2, -2), (-1, 0), (-1, -1), (0, 1), (1, 1), (2, 1), (-1, -2), (-2, 0), (0, 2), (1, 2), (2, 2), (-2, -1), (-2, -2), (-1, 1)]
-        } else {
-            [(0, 0), (-1, 0), (0, -1), (-1, -1), (0, -2), (-1, -2), (-2, 0), (-2, -1), (-2, -2), (1, 0), (1, -1), (0, 1), (-1, 1), (-2, 1), (1, -2), (2, 0), (0, 2), (-1, 2), (-2, 2), (2, -1), (2, -2), (1, 1)]
+        
+        let kicks = match rot_dir {
+            RotateDirection::Cw   => [(0, 0), (-1, 0), (0, -1), (-1, -1), (0, -2), (-1, -2), (-2, 0), (-2, -1), (-2, -2), ( 1, 0), ( 1, -1), (0, 1), (-1, 1), (-2, 1), ( 1, -2), ( 2,  0), (0,  2), (-1,  2), (-2, 2), ( 2, -1), ( 2, -2), ( 1, 1)],
+            RotateDirection::Ccw  => [(0, 0), ( 1, 0), (0, -1), ( 1, -1), (0, -2), ( 1, -2), ( 2, 0), ( 2, -1), ( 2, -2), (-1, 0), (-1, -1), (0, 1), ( 1, 1), ( 2, 1), (-1, -2), (-2,  0), (0,  2), ( 1,  2), ( 2, 2), (-2, -1), (-2, -2), (-1, 1)],
+            RotateDirection::Flip => [(0, 0), (0, -1), ( 1, 0), (-1,  0), (0, -2), (-1, -1), (1, -1), ( 1, -2), (-1, -2), ( 2, 0), (-2,  0), (0, 1), ( 1, 1), (-1, 1), ( 2, -1), (-2, -1), (2, -2), (-2, -2), ( 2, 1), (-2,  1), ( 0, -3), ( 0, 2)],
+            _ => [(0, 0); 22]
         };
 
         for &(dx, dy) in &kicks {
@@ -103,19 +105,19 @@ impl FallingPiece {
     pub fn cw<R: Row>(&mut self, board: &Board<R>) -> bool {
         let mut target = self.kind;
         target.cw();
-        self.rotate(target, board, false)
+        self.rotate(target, board, RotateDirection::Cw)
     }
 
     pub fn ccw<R: Row>(&mut self, board: &Board<R>) -> bool {
         let mut target = self.kind;
         target.ccw();
-        self.rotate(target, board, true)
+        self.rotate(target, board, RotateDirection::Ccw)
     }
 
     pub fn flip<R: Row>(&mut self, board: &Board<R>) -> bool {
         let mut target = self.kind;
         target.flip();
-        self.rotate(target, board, false)
+        self.rotate(target, board, RotateDirection::Flip)
     }
 
     pub fn same_location(&self, other: &Self) -> bool {
@@ -125,6 +127,11 @@ impl FallingPiece {
         other_cells.sort();
         self_cells == other_cells
     }
+}
+
+#[derive(Copy, Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
+pub enum RotateDirection {
+    Cw, Ccw, Flip, Zero
 }
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq, Hash)]
