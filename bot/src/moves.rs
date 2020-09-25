@@ -98,6 +98,15 @@ pub fn find_moves(
                 mode, fast_mode,
                 PieceMovement::Flip, false
             );
+            
+            if board.on_stack(&position) {
+                attempt(
+                    board, &moves, position,
+                    &mut checked, &mut check_queue,
+                    mode, fast_mode,
+                    PieceMovement::Meme, false
+                );
+            }   
 
             if mode == MovementMode::ZeroG {
                 attempt(

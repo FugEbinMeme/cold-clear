@@ -47,6 +47,7 @@ impl PieceMoveExecutor {
                                 self.controller.rotate_right = false;
                                 self.controller.rotate_180 = false;
                                 self.controller.left = false;
+                                self.controller.meme_flip = false;
 
                                 self.controller.soft_drop = true;
                                 if board.on_stack(piece) {
@@ -60,6 +61,7 @@ impl PieceMoveExecutor {
                                 self.controller.rotate_right = false;
                                 self.controller.rotate_180 = false;
                                 self.controller.soft_drop = false;
+                                self.controller.meme_flip = false;
                                 
                                 self.controller.left ^= true;
                                 if self.controller.left {
@@ -72,6 +74,7 @@ impl PieceMoveExecutor {
                                 self.controller.rotate_right = false;
                                 self.controller.rotate_180 = false;
                                 self.controller.soft_drop = false;
+                                self.controller.meme_flip = false;
                                 
                                 self.controller.right ^= true;
                                 if self.controller.right {
@@ -84,6 +87,7 @@ impl PieceMoveExecutor {
                                 self.controller.rotate_180 = false;
                                 self.controller.left = false;
                                 self.controller.soft_drop = false;
+                                self.controller.meme_flip = false;
                                 
                                 self.controller.rotate_right ^= true;
                                 if self.controller.rotate_right {
@@ -96,6 +100,7 @@ impl PieceMoveExecutor {
                                 self.controller.rotate_right = false;
                                 self.controller.rotate_180 = false;
                                 self.controller.soft_drop = false;
+                                self.controller.meme_flip = false;
                                 
                                 self.controller.rotate_left ^= true;
                                 if self.controller.rotate_left {
@@ -108,9 +113,23 @@ impl PieceMoveExecutor {
                                 self.controller.rotate_right = false;
                                 self.controller.rotate_left = false;
                                 self.controller.soft_drop = false;
+                                self.controller.meme_flip = false;
                                 
                                 self.controller.rotate_180 ^= true;
                                 if self.controller.rotate_180 {
+                                    self.executing.pop_front();
+                                }
+                            }
+                            Some(PieceMovement::Meme) => {
+                                self.controller.left = false;
+                                self.controller.right = false;
+                                self.controller.rotate_right = false;
+                                self.controller.rotate_left = false;
+                                self.controller.soft_drop = false;
+                                self.controller.rotate_180 = false;
+                                
+                                self.controller.meme_flip ^= true;
+                                if self.controller.meme_flip {
                                     self.executing.pop_front();
                                 }
                             }

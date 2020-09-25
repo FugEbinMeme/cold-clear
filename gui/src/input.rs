@@ -85,6 +85,7 @@ struct Config<T> {
     rotate_left: T,
     rotate_right: T,
     rotate_180: T,
+    meme_flip: T,
     hard_drop: T,
     soft_drop: T,
     hold: T
@@ -98,6 +99,7 @@ impl Default for Config<VirtualKeyCode> {
             rotate_left: VirtualKeyCode::Z,
             rotate_right: VirtualKeyCode::X,
             rotate_180: VirtualKeyCode::V,
+            meme_flip: VirtualKeyCode::B,
             hard_drop: VirtualKeyCode::Space,
             soft_drop: VirtualKeyCode::Down,
             hold: VirtualKeyCode::C,
@@ -113,6 +115,7 @@ impl Default for Config<GamepadControl> {
             rotate_left: GamepadControl::Button(Button::South),
             rotate_right: GamepadControl::Button(Button::East),
             rotate_180: GamepadControl::Button(Button::West),
+            meme_flip: GamepadControl::Button(Button::RightTrigger),
             hard_drop: GamepadControl::Button(Button::DPadUp),
             soft_drop: GamepadControl::Button(Button::DPadDown),
             hold: GamepadControl::Button(Button::LeftTrigger)
@@ -137,6 +140,9 @@ impl InputSource for UserInput {
             ),
             rotate_180: self.read_input(
                 keys, gamepad, self.keyboard.rotate_180, self.gamepad.rotate_180
+            ),
+            meme_flip: self.read_input(
+                keys, gamepad, self.keyboard.meme_flip, self.gamepad.meme_flip
             ),
             hard_drop: self.read_input(
                 keys, gamepad, self.keyboard.hard_drop, self.gamepad.hard_drop
