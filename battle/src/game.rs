@@ -83,7 +83,6 @@ impl Game {
         update_input(&mut self.used.rotate_right, self.prev.rotate_right, current.rotate_right);
         update_input(&mut self.used.rotate_left, self.prev.rotate_left, current.rotate_left);
         update_input(&mut self.used.rotate_180, self.prev.rotate_180, current.rotate_180);
-        update_input(&mut self.used.meme_flip, self.prev.meme_flip, current.meme_flip);
         update_input(&mut self.used.soft_drop, self.prev.soft_drop, current.soft_drop);
         self.used.hold = !self.prev.hold && current.hold;
         self.used.hard_drop = !self.prev.hard_drop && current.hard_drop;
@@ -253,19 +252,6 @@ impl Game {
                 if self.used.rotate_180 {
                     if falling.piece.flip(&self.board) {
                         self.used.rotate_180 = false;
-                        falling.rotation_move_count += 1;
-                        falling.lock_delay = self.config.lock_delay;
-                        if falling.piece.tspin != TspinStatus::None {
-                            events.push(Event::PieceTSpined);
-                        } else {
-                            events.push(Event::PieceRotated);
-                        }
-                    }
-                }
-
-                if self.used.meme_flip {
-                    if falling.piece.memeflip(&self.board) {
-                        self.used.meme_flip = false;
                         falling.rotation_move_count += 1;
                         falling.lock_delay = self.config.lock_delay;
                         if falling.piece.tspin != TspinStatus::None {

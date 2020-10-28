@@ -13,7 +13,6 @@ pub struct Controller {
     pub rotate_right: bool,
     pub rotate_left: bool,
     pub rotate_180: bool,
-    pub meme_flip: bool,
     pub soft_drop: bool,
     pub hard_drop: bool,
     pub hold: bool
@@ -29,8 +28,7 @@ impl serde::Serialize for Controller {
             (self.rotate_180 as u16)   << 4 |
             (self.hold as u16)         << 5 |
             (self.soft_drop as u16)    << 6 |
-            (self.hard_drop as u16)    << 7 |
-            (self.meme_flip as u16)    << 8 
+            (self.hard_drop as u16)    << 7 
         )
     }
 }
@@ -52,8 +50,7 @@ impl<'de> serde::Deserialize<'de> for Controller {
                     rotate_180:   (v >> 4) & 1 != 0,
                     hold:         (v >> 5) & 1 != 0,
                     soft_drop:    (v >> 6) & 1 != 0,
-                    hard_drop:    (v >> 7) & 1 != 0,
-                    meme_flip:    (v >> 8) & 1 != 0,
+                    hard_drop:    (v >> 7) & 1 != 0
                 })
             }
         }
