@@ -87,7 +87,7 @@ fn main() {
         book.recalculate_graph();
         println!("Took {:?} to calculate the book", t.elapsed());
         let initial_position = libtetris::Board::new_with_state(
-            [[false; 10]; 40], initial_bag.bag, initial_bag.hold, false, 0
+            [[false; 10]; 25], initial_bag.bag, initial_bag.hold, false, 0
         ).into();
         println!("{:?}", book.value_of_position(initial_position));
 
@@ -142,7 +142,7 @@ fn process_soln(
 ) -> ArrayVec<[(Position, FallingPiece); 10]> {
     let mut poses = ArrayVec::new();
     let mut pos: Position = libtetris::Board::new_with_state(
-        [[false; 10]; 40], bag.bag, bag.hold, false, 0
+        [[false; 10]; 25], bag.bag, bag.hold, false, 0
     ).into();
     let mut b = pcf::BitBoard(0);
     for p in soln {

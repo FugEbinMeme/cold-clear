@@ -120,11 +120,6 @@ impl FallingPiece {
         self.rotate(target, board, RotateDirection::Flip)
     }
 
-    pub fn memeflip<R: Row> (&mut self, board:&Board<R>) -> bool {
-        let target = self.kind;
-        self.rotate(target, board, RotateDirection::Meme)
-    }
-
     pub fn same_location(&self, other: &Self) -> bool {
         if self.kind.0 != other.kind.0 {
             return false
@@ -141,7 +136,7 @@ impl FallingPiece {
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 pub enum RotateDirection {
-    Cw, Ccw, Flip, Meme, Zero
+    Cw, Ccw, Flip, Zero
 }
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq, Hash)]

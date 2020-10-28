@@ -71,7 +71,6 @@ cenum! {
 
     enum CCTspinStatus => TspinStatus {
         CC_NONE => TspinStatus::None,
-        CC_MINI => TspinStatus::Mini,
         CC_FULL => TspinStatus::Full
     }
 
